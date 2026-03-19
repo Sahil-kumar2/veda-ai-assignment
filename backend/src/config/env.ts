@@ -24,8 +24,7 @@ const envSchema = z.object({
   REDIS_HOST: z.string().default("localhost"),
   REDIS_PORT: z.string().default("6379"),
   REDIS_PASSWORD: z.string().optional(),
-
-  CORS_ORIGIN: z.string().optional(),
+  CORS_ORIGIN: z.string().default("http://localhost:5173"),
 
   GROQ_API_KEY: z.string({ required_error: "GROQ_API_KEY is required in .env" }),
   GROQ_MODEL: z.string().default("llama-3.3-70b-versatile"),
@@ -68,7 +67,7 @@ export const config = {
     model: parsed.data.GROQ_MODEL,
     baseUrl: normalizeEnvValue(parsed.data.GROQ_BASE_URL) as string,
   },
-  corsOrigin: parsed.data.CORS_ORIGIN,
+  corsOrigin: normalizeEnvValue(parsed.data.CORS_ORIGIN) as string,
   isDev: parsed.data.NODE_ENV === "development",
   isProd: parsed.data.NODE_ENV === "production",
 } as const;

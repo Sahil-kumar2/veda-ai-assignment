@@ -1,7 +1,7 @@
 import { Server as HttpServer } from "http";
 import { Server as SocketIOServer, Socket } from "socket.io";
 import { logger } from "../utils/logger";
-import { config } from "../config/env";
+import { isAllowedOrigin } from "../config/cors";
 
 export type AssignmentRealtimeStatus = "processing" | "completed" | "failed";
 
@@ -32,8 +32,15 @@ export const initSocketServer = (
 ): SocketIOServer<ClientToServerEvents, ServerToClientEvents> => {
   io = new SocketIOServer<ClientToServerEvents, ServerToClientEvents>(httpServer, {
     cors: {
-      origin: config.corsOrigin ? config.corsOrigin.split(",").map((v) => v.trim()) : true,
+      origin: (origin, callback) => {
+        if (isAllowedOrigin(origin)) {
+          callback(null, true);
+          return;
+        }
+        callback(new Error(`Socket CORS blocked for origin: ${origin ?? "unknown"}`));
+      },
       methods: ["GET", "POST"],
+      credentials: true,
     },
     pingTimeout: 60_000,
     pingInterval: 25_000,
