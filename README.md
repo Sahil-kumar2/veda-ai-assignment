@@ -131,9 +131,4 @@ cd ../frontend && npm run dev
 3. Set `MONGO_URI` to your Atlas SRV URI
 4. Set `MONGO_DB_NAME` (example: `veda_ai`)
 5. Restart backend and verify connection logs
-
-## Notes and Trade-offs
-
-- Reference file extraction is currently lightweight (text-first extraction).
-- OCR/deep document parsing can be added for richer file understanding.
-- Frontend bundle is currently large; route-level code splitting can further optimize load time.
+ 
